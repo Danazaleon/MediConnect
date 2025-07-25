@@ -2,4 +2,4 @@ package app.meedu.medi_connect
 
 import io.flutter.embedding.android.FlutterActivity
 
-class MainActivity: FlutterActivity()
+class MainActivity : FlutterActivity()
