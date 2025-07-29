@@ -5,6 +5,7 @@ import 'package:medi_connect/cubits/auth/auth_cubit.dart';
 import 'package:medi_connect/screens/doctor_login_screen.dart';
 import 'package:medi_connect/screens/patient_login_screen.dart';
 import 'package:medi_connect/screens/role_selection_screen.dart';
+import 'package:medi_connect/widgets/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,16 +21,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'MediConnect',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+      theme: ThemeData(useMaterial3: true,
       ),
       initialRoute: '/',
       routes: {
           '/': (context) => const RoleSelectionScreen(),
           '/doctor-login': (context) => const DoctorLoginScreen(),
           '/patient-login': (context) => const PatientLoginScreen(),
-          // Agrega aquí tus otras rutas
+          '/register': (context) => const RegisterScreen(),
         },
     )
     );

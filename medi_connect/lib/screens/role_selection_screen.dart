@@ -24,30 +24,15 @@ class RoleSelectionScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                
-                const SizedBox(height: 18),
-                //Texto "Bienvenid@ a"
-                const Text(
-                  'Bienvenid@ a',
-                  style: TextStyle(
-                    fontFamily: 'Verdana',
-                    fontSize: 30,
-                    color: AppColors.black,
-                    fontWeight: FontWeight.w900,
-                  ),
-                  textAlign: TextAlign.left,
-                ),
-                const SizedBox(height: 18),
-                
                 // Logo MediConnect
                 Image.asset(
                   'lib/assets/logo_mediconnect.png',
-                  width: size.width,
-                  height: size.width * 0.6,
+                  width: size.width*0.6,
+                  height: size.width * 0.3,
                   fit: BoxFit.contain,
                 ),
-                const SizedBox(height: 10),
-
+                const SizedBox(height: 20),
+                
                 // Texto "Cómo deseas iniciar?"
                 const Text(
                   '¿Cómo deseas iniciar?',
@@ -60,7 +45,15 @@ class RoleSelectionScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: 35),
-
+                
+                //Logo Paciente
+                Image.asset(
+                  'lib/assets/logo_person.png',
+                  width: size.width*0.2,
+                  height: size.width * 0.2,
+                  fit: BoxFit.contain,
+                ),
+                
                 // Botón Paciente -> Lleva al Login
                 FractionallySizedBox(
                   widthFactor: 0.7,
@@ -89,14 +82,22 @@ class RoleSelectionScreen extends StatelessWidget {
                       'Como Paciente',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         fontFamily: 'Verdana',
                         fontSize: 16,
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 30),
+                const SizedBox(height: 40),
+
+                //Logo Doctor
+                Image.asset(
+                  'lib/assets/logo_doctor.png',
+                  width: size.width*0.2,
+                  height: size.width * 0.2,
+                  fit: BoxFit.contain,
+                ),
 
                 // Botón Doctor -> Lleva al Login
                 FractionallySizedBox(
@@ -123,10 +124,10 @@ class RoleSelectionScreen extends StatelessWidget {
                       );
                     },
                     child: const Text(
-                      'Como Doctor',
+                      'Como Doctor/a',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
                         fontFamily: 'Verdana',
                         fontSize: 16,
                       ),
@@ -165,7 +166,7 @@ class RoleSelectionScreen extends StatelessWidget {
                       'Pruba de API',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w400,
                         fontFamily: 'Verdana',
                         fontSize: 16,
                       ),
