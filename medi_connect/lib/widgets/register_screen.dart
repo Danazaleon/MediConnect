@@ -1,6 +1,8 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:medi_connect/constants/app_colors.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -18,7 +20,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _nombreController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _telefonoController = TextEditingController();
-  final TextEditingController _fechaNacimientoController = TextEditingController();
+  final TextEditingController _fechaNacimientoController =
+      TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   // Doctor
@@ -26,8 +29,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final TextEditingController _especialidadController = TextEditingController();
   final TextEditingController _calificacionController = TextEditingController();
   final TextEditingController _emailDoctorController = TextEditingController();
-  final TextEditingController _telefonoDoctorController = TextEditingController();
-  final TextEditingController _passwordDoctorController = TextEditingController();
+  final TextEditingController _telefonoDoctorController =
+      TextEditingController();
+  final TextEditingController _passwordDoctorController =
+      TextEditingController();
 
   String? _especialidadSeleccionada;
   double? _calificacionSeleccionada;
@@ -43,6 +48,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
     'Psiquiatría',
     'Traumatología',
   ];
+
+  // Helper para InputDecoration con estilos personalizados
+  InputDecoration customInputDecoration({required String label}) {
+    return InputDecoration(
+      labelText: label,
+      labelStyle: const TextStyle(color: AppColors.black),
+      focusColor: AppColors.secondary,
+      hoverColor: AppColors.secondary,
+      fillColor: AppColors.background,
+      focusedBorder: const UnderlineInputBorder(
+        borderSide: BorderSide(color: AppColors.secondary),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +86,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-
                 //Imagen de personas
                 Image.asset(
                   'lib/assets/register_people.png',
-                  width: screenWidth * 0.7, // 35% del ancho de pantalla
+                  width: screenWidth * 0.7,
                   height: screenWidth * 0.7,
                   fit: BoxFit.contain,
                 ),
@@ -86,19 +104,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                 ),
                 const SizedBox(height: 20),
-                
+
                 // Toggle para seleccionar rol
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     AnimatedToggleSwitch<String>.size(
-                      current: _role == UserRole.paciente ? 'Paciente' : 'Doctor',
+                      current: _role == UserRole.paciente
+                          ? 'Paciente'
+                          : 'Doctor',
                       height: 40,
                       values: const ['Paciente', 'Doctor'],
                       iconOpacity: 0.2,
                       indicatorSize: const Size.fromWidth(100),
                       customIconBuilder: (context, local, global) {
-                        final color = Color.lerp(AppColors.black, AppColors.white, local.animationValue);
+                        final color = Color.lerp(
+                          AppColors.black,
+                          AppColors.white,
+                          local.animationValue,
+                        );
                         return Text(
                           local.value == 'Paciente' ? 'Paciente' : 'Doctor/a',
                           style: TextStyle(
@@ -120,12 +144,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             color: AppColors.grey,
                             blurRadius: 5,
                             offset: const Offset(0, 1.5),
-                          )
-                        ]
+                          ),
+                        ],
                       ),
                       selectedIconScale: 1.0,
                       onChanged: (value) => setState(() {
-                        _role = value == 'Paciente' ? UserRole.paciente : UserRole.doctor;
+                        _role = value == 'Paciente'
+                            ? UserRole.paciente
+                            : UserRole.doctor;
                       }),
                     ),
                   ],
@@ -139,7 +165,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     widthFactor: 1,
                     child: TextField(
                       controller: _nombreController,
-                      decoration: const InputDecoration(labelText: 'Nombre'),
+                      style: const TextStyle(color: AppColors.black),
+                      decoration: customInputDecoration(label: 'Nombre'),
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -149,7 +177,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     widthFactor: 1,
                     child: TextField(
                       controller: _emailController,
-                      decoration: const InputDecoration(labelText: 'Email'),
+                      decoration: customInputDecoration(label: 'Email'),
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -159,7 +188,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     widthFactor: 1,
                     child: TextField(
                       controller: _telefonoController,
-                      decoration: const InputDecoration(labelText: 'Teléfono'),
+                      decoration: customInputDecoration(label: 'Teléfono'),
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -169,43 +199,73 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     widthFactor: 1,
                     child: TextField(
                       controller: _fechaNacimientoController,
-                      decoration: const InputDecoration(labelText: 'Fecha de nacimiento (YYYY-MM-DD)'),
+                      decoration: customInputDecoration(
+                        label: 'Fecha de nacimiento (DD-MM-AAAA)',
+                      ),
+                      readOnly: true,
                       onTap: () async {
                         FocusScope.of(context).requestFocus(FocusNode());
                         DateTime? picked = await showDatePicker(
                           context: context,
                           initialDate: DateTime(2000),
                           firstDate: DateTime(1900),
-                          lastDate: DateTime.now(),
+                          lastDate: DateTime.now().subtract(
+                            const Duration(days: 6570),
+                          ),
+                          locale: const Locale('es', ''),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: ColorScheme.light(
+                                  primary: AppColors
+                                      .secondary, // Color principal (header, botón OK)
+                                  onPrimary: Colors
+                                      .white, // Color del texto en el header
+                                  surface: AppColors
+                                      .background, // Fondo del calendario
+                                  onSurface: AppColors
+                                      .black, // Color del texto de los días
+                                ),
+                                dialogTheme: DialogThemeData(
+                                  backgroundColor: AppColors.background,
+                                ), // Fondo del diálogo
+                              ),
+                              child: child!,
+                            );
+                          },
                         );
                         if (picked != null) {
-                          _fechaNacimientoController.text = picked.toIso8601String().split('T').first;
+                          _fechaNacimientoController.text = DateFormat(
+                            'dd-MM-yyyy',
+                            'es',
+                          ).format(picked);
                         }
                       },
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
-                  
+
                   //Input Contraseña
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: TextField(
                       controller: _passwordController,
-                      decoration: const InputDecoration(labelText: 'Contraseña'),
+                      decoration: customInputDecoration(label: 'Contraseña'),
                       obscureText: true,
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
-                ] 
-                
+                ]
                 //SI ES DOCTOR
                 else ...[
-
-                  //Input Nombre Doctor 
+                  //Input Nombre Doctor
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: TextField(
                       controller: _nombreDoctorController,
-                      decoration: const InputDecoration(labelText: 'Nombre'),
+                      decoration: customInputDecoration(label: 'Nombre'),
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -216,14 +276,16 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: DropdownButtonFormField<String>(
                       value: _especialidadSeleccionada,
                       items: especialidades
-                          .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                          .map(
+                            (e) => DropdownMenuItem(value: e, child: Text(e)),
+                          )
                           .toList(),
                       onChanged: (value) {
                         setState(() {
                           _especialidadSeleccionada = value;
                         });
                       },
-                      decoration: const InputDecoration(labelText: 'Especialidad'),
+                      decoration: customInputDecoration(label: 'Especialidad'),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -234,17 +296,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     child: DropdownButtonFormField<double>(
                       value: _calificacionSeleccionada,
                       items: [1, 2, 3, 4, 5]
-                          .map((e) => DropdownMenuItem(
-                                value: e.toDouble(),
-                                child: Text('$e'),
-                              ))
+                          .map(
+                            (e) => DropdownMenuItem(
+                              value: e.toDouble(),
+                              child: Text('$e'),
+                            ),
+                          )
                           .toList(),
                       onChanged: (value) {
                         setState(() {
                           _calificacionSeleccionada = value;
                         });
                       },
-                      decoration: const InputDecoration(labelText: 'Calificación (1-5)'),
+                      decoration: customInputDecoration(
+                        label: 'Calificación (1-5)',
+                      ),
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -254,7 +320,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     widthFactor: 1,
                     child: TextField(
                       controller: _emailDoctorController,
-                      decoration: const InputDecoration(labelText: 'Email'),
+                      decoration: customInputDecoration(label: 'Email'),
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -264,7 +331,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     widthFactor: 1,
                     child: TextField(
                       controller: _telefonoDoctorController,
-                      decoration: const InputDecoration(labelText: 'Teléfono'),
+                      decoration: customInputDecoration(label: 'Teléfono'),
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                   const SizedBox(height: 16),
@@ -274,13 +342,14 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     widthFactor: 1,
                     child: TextField(
                       controller: _passwordDoctorController,
-                      decoration: const InputDecoration(labelText: 'Contraseña'),
+                      decoration: customInputDecoration(label: 'Contraseña'),
                       obscureText: true,
+                      cursorColor: AppColors.secondary,
                     ),
                   ),
                 ],
                 const SizedBox(height: 30),
-                
+
                 //Boton de registro
                 Center(
                   child: ElevatedButton(
@@ -289,7 +358,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
-                      padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 40),
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 18,
+                        horizontal: 40,
+                      ),
                     ),
                     onPressed: () {
                       // Aquí puedes manejar el registro según el rol

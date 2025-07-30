@@ -12,9 +12,6 @@ class PatientLoginScreen extends StatelessWidget {
       title: 'Inicia sesión como paciente',
       role: 'patient',
       authCubit: context.read<AuthCubit>(),
-      onLogin: (ctx, email, password) {
-        ctx.read<AuthCubit>().loginPatient(email, password);
-      },
       imagePath: 'lib/assets/login_person.png',
     );
   }

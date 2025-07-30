@@ -23,7 +23,7 @@ class AuthRoleSelected extends AuthState {
 
 /// Estado cuando el doctor se autentica correctamente
 class DoctorAuthenticated extends AuthState {
-  final String doctorId;
+  final int doctorId;
 
   DoctorAuthenticated(this.doctorId);
 
@@ -33,7 +33,7 @@ class DoctorAuthenticated extends AuthState {
 
 /// Estado cuando el paciente se autentica correctamente
 class PatientAuthenticated extends AuthState {
-  final String patientId;
+  final int patientId;
 
   PatientAuthenticated(this.patientId);
 

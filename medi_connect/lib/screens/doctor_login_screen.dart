@@ -13,9 +13,6 @@ class DoctorLoginScreen extends StatelessWidget {
       title: 'Inicia sesión como doctor/a',
       role: 'doctor',
       authCubit: context.read<AuthCubit>(),
-      onLogin: (ctx, email, password) {
-        ctx.read<AuthCubit>().loginDoctor(email, password);
-      },
       imagePath: 'lib/assets/login_doctor.png'
     );
   }
