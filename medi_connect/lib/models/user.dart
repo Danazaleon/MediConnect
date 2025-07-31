@@ -7,9 +7,9 @@ class User {
   final String phone;
   final String password;
   final String type; // 'doctor' o 'patient'
-  final String? specialty;
-  final double? rating; 
-  final DateTime? birthdate;
+  final String? specialty;//Solo de doctor
+  final double? rating; //Solo de doctor
+  final DateTime? birthdate;//Solo de paciente
 
   User({
     required this.id,

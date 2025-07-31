@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medi_connect/constants/app_colors.dart';
 import 'package:medi_connect/cubits/auth/auth_cubit.dart';
 import 'package:flutter/gestures.dart';
+import 'package:medi_connect/widgets/error_dialog.dart';
 
 class LoginScreen extends StatefulWidget {
   final String title;
@@ -25,7 +26,7 @@ class LoginScreen extends StatefulWidget {
 class LoginScreenState extends State<LoginScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool _ocultarPassword = true;
+  bool _hidePassword = true;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +50,9 @@ class LoginScreenState extends State<LoginScreen> {
           } else if (state is PatientAuthenticated && widget.role == 'patient') {
             Navigator.pushReplacementNamed(context, '/patient-home');
           } else if (state is AuthError) {
-            ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
+            showErrorDialog( context,"Error al ingresar",state.message);
+            
+            //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(state.message)));
           }
         },
         builder: (context, state) {
@@ -97,7 +100,7 @@ class LoginScreenState extends State<LoginScreen> {
 
                 // Campo de contraseña
                 TextFormField(
-                  obscureText: _ocultarPassword,
+                  obscureText: _hidePassword,
                   cursorColor: AppColors.primary,
                   controller: passwordController,
                   decoration: InputDecoration(
@@ -108,12 +111,12 @@ class LoginScreenState extends State<LoginScreen> {
                     ),
                     suffixIcon: IconButton(
                       icon: Icon(
-                        _ocultarPassword ? Icons.visibility_off : Icons.visibility,
-                        color: Color(0xFF001563),
+                        _hidePassword ? Icons.visibility_off : Icons.visibility,
+                        color:AppColors.primary,
                       ),
                       onPressed: () {
                         setState(() {
-                          _ocultarPassword = !_ocultarPassword;
+                          _hidePassword = !_hidePassword;
                         });
                       },
                     ),
@@ -141,10 +144,11 @@ class LoginScreenState extends State<LoginScreen> {
                     onPressed: () {
                       if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
                         
-                        context.read<AuthCubit>().login(emailController.text, passwordController.text);
+                        context.read<AuthCubit>().login(emailController.text.toLowerCase(), passwordController.text);
                         
                       } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Por favor ingresa tu correo y contraseña')));
+                        showErrorDialog( context,"Faltan Campos","Por favor ingresa tu correo y contraseña");
+                        //ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Por favor ingresa tu correo y contraseña')));
                       
                       }
                     },
@@ -194,44 +198,4 @@ class LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  void _showErrorDialog(BuildContext context, String title, String message) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: AppColors.background,
-        title: Row(
-          children: [
-            Icon(
-              Icons.warning,
-              color: const Color.fromARGB(255, 149, 4, 4),
-              size: 24,
-            ),
-            const SizedBox(width: 8),
-            Text(
-              title,
-              style: TextStyle(color: AppColors.black),
-            ),
-          ],
-        ),
-        content: Text(
-          message,
-          style: const TextStyle(fontSize: 18),
-        ),
-        actions: [
-          Center(
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.secondary,
-                foregroundColor: AppColors.white,
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-              child: const Text('Aceptar'),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }

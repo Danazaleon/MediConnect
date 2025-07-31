@@ -1,8 +1,13 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:logger/logger.dart';
 import 'package:medi_connect/constants/app_colors.dart';
 import 'package:intl/intl.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:medi_connect/cubits/auth/auth_cubit.dart';
+import 'package:flutter/services.dart';
+import 'package:medi_connect/functions/functions.dart';
+import 'package:medi_connect/widgets/error_dialog.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -15,27 +20,27 @@ enum UserRole { paciente, doctor }
 
 class _RegisterScreenState extends State<RegisterScreen> {
   UserRole? _role = UserRole.paciente;
-
+  
   // Paciente
-  final TextEditingController _nombreController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _telefonoController = TextEditingController();
-  final TextEditingController _fechaNacimientoController =
-      TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _birthdateController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
   // Doctor
-  final TextEditingController _nombreDoctorController = TextEditingController();
-  final TextEditingController _especialidadController = TextEditingController();
-  final TextEditingController _calificacionController = TextEditingController();
+  final TextEditingController _nameDoctorController = TextEditingController();
   final TextEditingController _emailDoctorController = TextEditingController();
-  final TextEditingController _telefonoDoctorController =
-      TextEditingController();
-  final TextEditingController _passwordDoctorController =
-      TextEditingController();
+  final TextEditingController _phoneDoctorController = TextEditingController();
+  final TextEditingController _passwordDoctorController = TextEditingController();
 
-  String? _especialidadSeleccionada;
-  double? _calificacionSeleccionada;
+  String? _specialtySelected;
+  double _calificationSelected = 0.0;
+  bool _hidePassword = true;
+
+  String? _emailError;
+  String? _phoneError;
+  String? _passwordError;
 
   final List<String> especialidades = [
     'Medicina General',
@@ -50,7 +55,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   ];
 
   // Helper para InputDecoration con estilos personalizados
-  InputDecoration customInputDecoration({required String label}) {
+  InputDecoration customInputDecoration({required String label, String? errorText}) {
     return InputDecoration(
       labelText: label,
       labelStyle: const TextStyle(color: AppColors.black),
@@ -60,7 +65,23 @@ class _RegisterScreenState extends State<RegisterScreen> {
       focusedBorder: const UnderlineInputBorder(
         borderSide: BorderSide(color: AppColors.secondary),
       ),
+      errorText: errorText,
     );
+  }
+
+  //Helper para validar form
+  void _validateForm() {
+    setState(() {
+      if(_role == UserRole.paciente) {
+        _emailError = isValidEmail(_emailController.text) ? null : 'Correo inválido';
+        _phoneError = validatePhoneNumber(_phoneController.text);
+        _passwordError = isValidPassword(_passwordController.text) ? null : 'Contraseña no válida. La contraseña debe tener: \n-Al menos 8 caracteres \n-Al menos una letra mayúscula \n-Al menos un número';
+      } else {
+        _emailError = isValidEmail(_emailDoctorController.text) ? null : 'Correo inválido';
+        _phoneError = validatePhoneNumber(_phoneDoctorController.text);
+        _passwordError = isValidPassword(_passwordDoctorController.text) ? null : 'Contraseña no válida';
+      }
+    });
   }
 
   @override
@@ -86,7 +107,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                //Imagen de personas
+                // Imagen de personas
                 Image.asset(
                   'lib/assets/register_people.png',
                   width: screenWidth * 0.7,
@@ -94,7 +115,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   fit: BoxFit.contain,
                 ),
 
-                //Texto de pregunta
+                // Texto de pregunta
                 const Text(
                   '¿Eres paciente o doctor/a?',
                   style: TextStyle(
@@ -158,13 +179,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 const SizedBox(height: 20),
 
-                //SI ES PACIENTE
+                // SI ES PACIENTE
                 if (_role == UserRole.paciente) ...[
-                  //Input Nombre
+                  // Input Nombre
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: TextField(
-                      controller: _nombreController,
+                      controller: _nameController,
                       style: const TextStyle(color: AppColors.black),
                       decoration: customInputDecoration(label: 'Nombre'),
                       cursorColor: AppColors.secondary,
@@ -172,35 +193,42 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  //Input Correo
+                  // Input Correo
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: TextField(
                       controller: _emailController,
-                      decoration: customInputDecoration(label: 'Email'),
+                      decoration: customInputDecoration(label: 'Email', errorText: _emailError),
                       cursorColor: AppColors.secondary,
+                      onChanged: (value) => _validateForm(),
                     ),
                   ),
                   const SizedBox(height: 16),
 
-                  //Input Telefono
+                  // Input Teléfono
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: TextField(
-                      controller: _telefonoController,
-                      decoration: customInputDecoration(label: 'Teléfono'),
+                      controller: _phoneController,
+                      decoration: customInputDecoration(label: 'Teléfono', errorText: _phoneError),
+                      onChanged: (value) => _validateForm(),
                       cursorColor: AppColors.secondary,
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(11), // Máximo de 10 caracteres
+                        FilteringTextInputFormatter.digitsOnly, // Solo permite dígitos
+                      ],
                     ),
                   ),
                   const SizedBox(height: 16),
 
-                  //Input Fecha de Nacimiento
+                  // Input Fecha de Nacimiento
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: TextField(
-                      controller: _fechaNacimientoController,
+                      controller: _birthdateController,
                       decoration: customInputDecoration(
-                        label: 'Fecha de nacimiento (DD-MM-AAAA)',
+                        label: 'Fecha de nacimiento (AAAA-MM-DD)',
                       ),
                       readOnly: true,
                       onTap: () async {
@@ -212,7 +240,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           lastDate: DateTime.now().subtract(
                             const Duration(days: 6570),
                           ),
-                          locale: const Locale('es', ''),
                           builder: (context, child) {
                             return Theme(
                               data: Theme.of(context).copyWith(
@@ -235,9 +262,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           },
                         );
                         if (picked != null) {
-                          _fechaNacimientoController.text = DateFormat(
-                            'dd-MM-yyyy',
-                            'es',
+                          _birthdateController.text = DateFormat(
+                            'yyyy-MM-dd',
                           ).format(picked);
                         }
                       },
@@ -246,35 +272,124 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   const SizedBox(height: 16),
 
-                  //Input Contraseña
-                  FractionallySizedBox(
-                    widthFactor: 1,
-                    child: TextField(
-                      controller: _passwordController,
-                      decoration: customInputDecoration(label: 'Contraseña'),
-                      obscureText: true,
-                      cursorColor: AppColors.secondary,
+                  // Input Contraseña
+                  TextFormField(
+                  obscureText: _hidePassword,
+                  cursorColor: AppColors.secondary,
+                  controller: _passwordController,
+                  decoration: InputDecoration(
+                    errorText: _passwordError,
+                    labelText: 'Contraseña',
+                    labelStyle: TextStyle(color: AppColors.black),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color:  AppColors.secondary),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _hidePassword ? Icons.visibility_off : Icons.visibility,
+                        color: AppColors.secondary,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _hidePassword = !_hidePassword;
+                        });
+                      },
                     ),
                   ),
+                  
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingresa tu contraseña';
+                    }
+                    return null;
+                  },
+                  onChanged: (value) => _validateForm()
+                ),
+                  const SizedBox(height: 25),
                 ]
-                //SI ES DOCTOR
+                
+                // SI ES DOCTOR
                 else ...[
-                  //Input Nombre Doctor
+                  // Input Nombre Doctor
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: TextField(
-                      controller: _nombreDoctorController,
-                      decoration: customInputDecoration(label: 'Nombre'),
+                      controller: _nameDoctorController,
+                      decoration: customInputDecoration(label: 'Nombre',errorText: _phoneError),
                       cursorColor: AppColors.secondary,
+                      onChanged: (value) => _validateForm(),
                     ),
                   ),
                   const SizedBox(height: 16),
 
-                  //Input Especialidad
+                  // Input Email Doctor
+                  FractionallySizedBox(
+                    widthFactor: 1,
+                    child: TextField(
+                      controller: _emailDoctorController,
+                      decoration: customInputDecoration(label: 'Email', errorText: _emailError),
+                      cursorColor: AppColors.secondary,
+                      onChanged: (value) => _validateForm(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Input Teléfono Doctor
+                  FractionallySizedBox(
+                    widthFactor: 1,
+                    child: TextField(
+                      controller: _phoneDoctorController,
+                      decoration: customInputDecoration(label: 'Teléfono', errorText: _phoneError),
+                      cursorColor: AppColors.secondary,
+                      keyboardType: TextInputType.phone,
+                      inputFormatters: [
+                        LengthLimitingTextInputFormatter(11), // Máximo de 10 caracteres
+                        FilteringTextInputFormatter.digitsOnly, // Solo permite dígitos
+                      ],
+                      onChanged: (value) => _validateForm(),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Input Contraseña Doctor
+                  TextFormField(
+                  obscureText: _hidePassword,
+                  cursorColor: AppColors.secondary,
+                  controller: _passwordDoctorController,
+                  decoration: InputDecoration(
+                    labelText: 'Contraseña',
+                    errorText: _passwordError,
+                    labelStyle: TextStyle(color: AppColors.black),
+                    focusedBorder: UnderlineInputBorder(
+                      borderSide: BorderSide(color:  AppColors.secondary),
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _hidePassword ? Icons.visibility_off : Icons.visibility,
+                        color: AppColors.secondary,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _hidePassword = !_hidePassword;
+                        });
+                      },
+                    ),
+                  ),
+                  onChanged: (value) => _validateForm(),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Por favor ingresa tu contraseña';
+                    }
+                    return null;
+                  },
+                ),
+                  const SizedBox(height: 16),
+
+                  // Input Especialidad
                   FractionallySizedBox(
                     widthFactor: 1,
                     child: DropdownButtonFormField<String>(
-                      value: _especialidadSeleccionada,
+                      value: _specialtySelected,
                       items: especialidades
                           .map(
                             (e) => DropdownMenuItem(value: e, child: Text(e)),
@@ -282,75 +397,52 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           .toList(),
                       onChanged: (value) {
                         setState(() {
-                          _especialidadSeleccionada = value;
+                          _specialtySelected = value;
+                          Logger().i('Especialidad: $_specialtySelected');
                         });
                       },
                       decoration: customInputDecoration(label: 'Especialidad'),
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 20),
 
-                  //Input Calificación
+                  // Input Calificación
                   FractionallySizedBox(
-                    widthFactor: 1,
-                    child: DropdownButtonFormField<double>(
-                      value: _calificacionSeleccionada,
-                      items: [1, 2, 3, 4, 5]
-                          .map(
-                            (e) => DropdownMenuItem(
-                              value: e.toDouble(),
-                              child: Text('$e'),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _calificacionSeleccionada = value;
-                        });
-                      },
-                      decoration: customInputDecoration(
-                        label: 'Calificación (1-5)',
+                    alignment: Alignment.centerLeft,
+                    child: const Text(
+                      'Auto-Calificación (1-5)',
+                      textAlign: TextAlign.left,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 16),
-
-                  //Input Email Doctor
-                  FractionallySizedBox(
-                    widthFactor: 1,
-                    child: TextField(
-                      controller: _emailDoctorController,
-                      decoration: customInputDecoration(label: 'Email'),
-                      cursorColor: AppColors.secondary,
-                    ),
+                  Slider(
+                    activeColor: AppColors.secondary, // Color del track activo
+                    inactiveColor: AppColors.grey, // Color del track inactivo
+                    thumbColor: AppColors.secondary, // Color del thumb
+                    min: 0.0,
+                    value: _calificationSelected,
+                    max: 5.0,
+                    divisions: 10,
+                    label: _calificationSelected.toStringAsFixed(
+                      1,
+                    ), // Mostrar el valor actual
+                    onChanged: (value) {
+                      _calificationSelected =
+                          value; // Actualizar el valor seleccionado
+                      setState(() {});
+                    },
                   ),
-                  const SizedBox(height: 16),
-
-                  //Input Teléfono Doctor
-                  FractionallySizedBox(
-                    widthFactor: 1,
-                    child: TextField(
-                      controller: _telefonoDoctorController,
-                      decoration: customInputDecoration(label: 'Teléfono'),
-                      cursorColor: AppColors.secondary,
-                    ),
+                  Text(
+                    'Calificación seleccionada: ${_calificationSelected.toStringAsFixed(1)}',
+                    style: TextStyle(fontSize: 16),
                   ),
-                  const SizedBox(height: 16),
-
-                  //Input Contraseña Doctor
-                  FractionallySizedBox(
-                    widthFactor: 1,
-                    child: TextField(
-                      controller: _passwordDoctorController,
-                      decoration: customInputDecoration(label: 'Contraseña'),
-                      obscureText: true,
-                      cursorColor: AppColors.secondary,
-                    ),
-                  ),
+                  const SizedBox(height: 25),
                 ],
-                const SizedBox(height: 30),
 
-                //Boton de registro
+                // Botón de registro
                 Center(
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
@@ -364,11 +456,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ),
                     ),
                     onPressed: () {
-                      // Aquí puedes manejar el registro según el rol
+                      // Llamar a la función de registro Paciente
                       if (_role == UserRole.paciente) {
-                        // Lógica para registrar paciente
-                      } else {
-                        // Lógica para registrar doctor
+                        // Validar campos para paciente
+                        if (_nameController.text.isEmpty ||
+                            _emailController.text.isEmpty ||
+                            _phoneController.text.isEmpty ||
+                            _birthdateController.text.isEmpty ||
+                            _passwordController.text.isEmpty) {
+                              showErrorDialog(context, 'Campos incompletos', 'Por favor, completa todos los campos');
+                          
+                          return;
+                        } else {
+                          Map<String, dynamic> pacienteData = {
+                            "name": _nameController.text,
+                            "email": _emailController.text.toLowerCase(),
+                            "phone": _phoneController.text,
+                            "password": _passwordController.text,
+                            "type": 'patient',
+                            "specialty": null,
+                            "rating": null,
+                            "birthdate": _birthdateController.text,
+                            
+                          };
+                            
+                          // Lógica para registrar paciente
+                          context.read<AuthCubit>().registerAndLogin(
+                            pacienteData,
+                          );
+                        }
+                      }
+
+                      // Llamar a la función de registro Doctor
+                      else {
+                        // Validar campos para doctor
+                        if (_nameDoctorController.text.isEmpty ||
+                            _emailDoctorController.text.isEmpty ||
+                            _phoneDoctorController.text.isEmpty ||
+                            _passwordDoctorController.text.isEmpty ||
+                            _specialtySelected == null) {
+                          showErrorDialog(context, 'Campos incompletos', 'Por favor, completa todos los campos');
+                          
+                          return;
+                        } else {
+                          //Registro del Doctor
+                          Map<String, dynamic> doctorData = {
+                            "name": _nameDoctorController.text,
+                            "email": _emailDoctorController.text.toLowerCase(),
+                            "phone": _phoneDoctorController.text,
+                            "password": _passwordDoctorController.text,
+                            "type": 'doctor',
+                            "specialty": _specialtySelected,
+                            "rating": _calificationSelected,
+                            "birthdate": null, // No aplica para doctor
+                          };
+                          context.read<AuthCubit>().registerAndLogin(
+                            doctorData,
+                          );
+                        }
                       }
                     },
                     child: const Text(

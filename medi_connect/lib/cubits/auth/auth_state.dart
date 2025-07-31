@@ -41,6 +41,13 @@ class PatientAuthenticated extends AuthState {
   List<Object?> get props => [patientId];
 }
 
+/// Estado de éxito genérico
+class AuthSuccess extends AuthState {
+  final String message;
+
+  AuthSuccess(this.message);
+}
+
 /// Estado de error genérico
 class AuthError extends AuthState {
   final String message;

@@ -30,7 +30,6 @@ class AuthCubit extends Cubit<AuthState> {
       Logger().i('Response data: ${response.body}');
 
       if (response.statusCode == 200) {
-
         Map<String, dynamic> parsedJson = json.decode(response.body);
 
         User user = User.fromJson(parsedJson['user']);
@@ -45,7 +44,6 @@ class AuthCubit extends Cubit<AuthState> {
 
           if (_currentRole == UserRole.doctor) {
             emit(DoctorAuthenticated(user.id));
-            
           } else if (_currentRole == UserRole.patient) {
             emit(PatientAuthenticated(user.id));
           }
@@ -58,7 +56,7 @@ class AuthCubit extends Cubit<AuthState> {
           );
         }
       } else if (response.statusCode == 401) {
-        emit(AuthError('Credenciales inválidas'));
+        emit(AuthError('Correo o contraseña invalida'));
       } else {
         emit(AuthError('Error en la autenticación: ${response.errorMessage}'));
       }
@@ -66,4 +64,32 @@ class AuthCubit extends Cubit<AuthState> {
       emit(AuthError('Error en la conexión: ${e.toString()}'));
     }
   }
+
+  // Registro y Login
+  Future<void> registerAndLogin(Map<String, dynamic> userData) async {
+  emit(AuthLoading());
+  try {
+    final registrationResponse = await postRegister(userData);
+    Logger().i('Registro: ${registrationResponse.statusCode}');
+
+    if (registrationResponse.statusCode == 200) {
+      Map<String, dynamic> parsedJson = json.decode(registrationResponse.body);
+      User user = User.fromJson(parsedJson['user']);
+      
+      await login(user.email, user.password);
+      
+      // Mensaje de éxito
+      emit(AuthSuccess('Registro exitoso. Por favor, inicie sesión.'));
+    } else if (registrationResponse.statusCode == 400) {
+      // Mensaje de error por correo ya registrado
+      emit(AuthError('El correo ya está registrado. Por favor, inicie sesión.'));
+    } else {
+      // Mensaje de error genérico
+      emit(AuthError('Error en el registro: ${registrationResponse.errorMessage}'));
+    }
+  } catch (e) {
+    emit(AuthError('Error en la conexión: ${e.toString()}'));
+  }
+}
+
 }
