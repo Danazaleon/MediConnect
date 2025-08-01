@@ -23,22 +23,22 @@ class AuthRoleSelected extends AuthState {
 
 /// Estado cuando el doctor se autentica correctamente
 class DoctorAuthenticated extends AuthState {
-  final int doctorId;
+  final User user;
 
-  DoctorAuthenticated(this.doctorId);
+  DoctorAuthenticated(this.user);
 
   @override
-  List<Object?> get props => [doctorId];
+  List<Object?> get props => [user];
 }
 
 /// Estado cuando el paciente se autentica correctamente
 class PatientAuthenticated extends AuthState {
-  final int patientId;
+  final User user;
 
-  PatientAuthenticated(this.patientId);
+  PatientAuthenticated(this.user);
 
   @override
-  List<Object?> get props => [patientId];
+  List<Object?> get props => [user];
 }
 
 /// Estado de éxito genérico

@@ -6,7 +6,7 @@ import 'package:medi_connect/screens/doctor_login_screen.dart';
 import 'package:medi_connect/screens/patient_home_screen.dart';
 import 'package:medi_connect/screens/patient_login_screen.dart';
 import 'package:medi_connect/screens/role_selection_screen.dart';
-import 'package:medi_connect/widgets/register_screen.dart';
+import 'package:medi_connect/screens/register_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

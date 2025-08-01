@@ -1,7 +1,6 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:logger/logger.dart';
 import 'package:medi_connect/constants/app_colors.dart';
 import 'package:intl/intl.dart';
 import 'package:medi_connect/cubits/auth/auth_cubit.dart';
@@ -79,7 +78,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       } else {
         _emailError = isValidEmail(_emailDoctorController.text) ? null : 'Correo inválido';
         _phoneError = validatePhoneNumber(_phoneDoctorController.text);
-        _passwordError = isValidPassword(_passwordDoctorController.text) ? null : 'Contraseña no válida';
+        _passwordError = isValidPassword(_passwordDoctorController.text) ? null : 'Contraseña no válida. La contraseña debe tener: \n-Al menos 8 caracteres \n-Al menos una letra mayúscula \n-Al menos un número';
       }
     });
   }
@@ -398,7 +397,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       onChanged: (value) {
                         setState(() {
                           _specialtySelected = value;
-                          Logger().i('Especialidad: $_specialtySelected');
                         });
                       },
                       decoration: customInputDecoration(label: 'Especialidad'),

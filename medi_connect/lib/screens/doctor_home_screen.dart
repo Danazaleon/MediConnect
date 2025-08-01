@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:medi_connect/widgets/appointment_item.dart';
+import 'package:medi_connect/widgets/summary_dard.dart';
 
 class DoctorHomeScreen extends StatelessWidget {
   const DoctorHomeScreen({super.key});
@@ -114,14 +116,14 @@ class DoctorHomeScreen extends StatelessWidget {
             // Resumen rápido
             Row(
               children: [
-                _SummaryCard(
+                SummaryCard(
                   icon: Icons.people,
                   value: '12',
                   label: 'Pacientes hoy',
                   color: Colors.blue,
                 ),
                 const SizedBox(width: 10),
-                _SummaryCard(
+                SummaryCard(
                   icon: Icons.timer,
                   value: '3',
                   label: 'Pendientes',
@@ -146,17 +148,17 @@ class DoctorHomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 10),
-                    _AppointmentItem(
+                    AppointmentItem(
                       patient: 'María Gutiérrez',
                       time: '10:30 AM',
                       status: 'Confirmada',
                     ),
-                    _AppointmentItem(
+                    AppointmentItem(
                       patient: 'Carlos Martínez',
                       time: '11:15 AM',
                       status: 'Pendiente',
                     ),
-                    _AppointmentItem(
+                    AppointmentItem(
                       patient: 'Lucía Fernández',
                       time: '2:00 PM',
                       status: 'Confirmada',
@@ -167,113 +169,6 @@ class DoctorHomeScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _SummaryCard extends StatelessWidget {
-  final IconData icon;
-  final String value;
-  final String label;
-  final Color color;
-
-  const _SummaryCard({
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Expanded(
-      child: Card(
-        child: Padding(
-          padding: const EdgeInsets.all(12),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon, color: color, size: 28),
-              const SizedBox(height: 8),
-              Text(
-                value,
-                style: const TextStyle(
-                  fontSize: 24,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                label,
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _AppointmentItem extends StatelessWidget {
-  final String patient;
-  final String time;
-  final String status;
-
-  const _AppointmentItem({
-    required this.patient,
-    required this.time,
-    required this.status,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 8),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.shade300),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Row(
-        children: [
-          const Icon(Icons.person, size: 40),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  patient,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                Text(time),
-              ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: status == 'Confirmada' 
-                ? Colors.green.shade100 
-                : Colors.orange.shade100,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              status,
-              style: TextStyle(
-                color: status == 'Confirmada' 
-                  ? Colors.green 
-                  : Colors.orange,
-              ),
-            ),
-          ),
-        ],
       ),
     );
   }
