@@ -76,6 +76,7 @@ lib/
   cubits/           # Lógica de estado (BLoC/Cubit)
   controllers/      # Controladores de lógica de negocio
   models/           # Modelos de datos
+  functions/        # Funciones auxiliares
   screens/          # Pantallas principales (UI)
   widgets/          # Widgets reutilizables
   constants/        # Colores, estilos, etc.

@@ -1,7 +1,7 @@
 class Appointment {
   final int id;
   final int doctorId;
-  final String patientName;
+  final String? patientName;
   final DateTime date;
 
   Appointment({
@@ -16,7 +16,7 @@ class Appointment {
     return Appointment(
       id: json['id'],
       doctorId: json['doctorId'],
-      patientName: json['patientName'],
+      patientName: json['patientName'] ?? 'No tiene nombre', // Asignar valor por defecto
       date: DateTime.parse(json['date']),
     );
   }

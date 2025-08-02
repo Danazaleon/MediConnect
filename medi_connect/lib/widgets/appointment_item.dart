@@ -1,15 +1,14 @@
 
 import 'package:flutter/material.dart';
 
+//Widget para mostrar cada cita en la lista de citas
 class AppointmentItem extends StatelessWidget {
-  final String patient;
+  final String patientName;
   final String time;
-  final String status;
 
-  const AppointmentItem({
-    required this.patient,
+  const AppointmentItem({super.key, 
+    required this.patientName,
     required this.time,
-    required this.status,
   });
 
   @override
@@ -23,37 +22,26 @@ class AppointmentItem extends StatelessWidget {
       ),
       child: Row(
         children: [
+          
+          //Icon de Usuario
           const Icon(Icons.person, size: 40),
           const SizedBox(width: 10),
+          
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                //Nombre del Paciente
                 Text(
-                  patient,
+                  patientName,
                   style: const TextStyle(
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                
+                //Hora de la Cita
                 Text(time),
               ],
-            ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: status == 'Confirmada' 
-                ? Colors.green.shade100 
-                : Colors.orange.shade100,
-              borderRadius: BorderRadius.circular(12),
-            ),
-            child: Text(
-              status,
-              style: TextStyle(
-                color: status == 'Confirmada' 
-                  ? Colors.green 
-                  : Colors.orange,
-              ),
             ),
           ),
         ],

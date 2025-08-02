@@ -33,7 +33,7 @@ Future postLogin(Map<String, dynamic> userData) async {
 }
 
 //Obtener Citas de un Doctor
-Future getAppointments(String doctorId) async {
+Future getAppointments(int doctorId) async {
   final url = Uri.http(urlBase(), 'doctors/$doctorId/appointments');
   Map<String, String> header = {'Accept': 'application/json'};
   try {
@@ -48,7 +48,7 @@ Future getAppointments(String doctorId) async {
 
 //Crear nueva cita para un doctor
 Future postAppointment(
-  String doctorId,
+  int doctorId,
   Map<String, dynamic> appointmentData,
 ) async {
   //appointmentData = {"patientName": "Ana Gómez",
