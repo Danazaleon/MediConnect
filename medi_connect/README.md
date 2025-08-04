@@ -1,20 +1,18 @@
-# MediConnect
+medi_connect/README.md# MediConnect
 
 MediConnect es una aplicación móvil desarrollada en Flutter que permite la gestión y autenticación de usuarios con roles de doctor y paciente.
 
 ## Tabla de Contenidos
 
-- [MediConnect](#mediconnect)
-  - [Tabla de Contenidos](#tabla-de-contenidos)
-  - [Requisitos Previos](#requisitos-previos)
-  - [Instalación](#instalación)
-  - [Ejecución Local](#ejecución-local)
-    - [Android/iOS](#androidios)
-    - [Web](#web)
-  - [Estructura del Proyecto](#estructura-del-proyecto)
-  - [Comandos Útiles](#comandos-útiles)
-  - [Solución de Problemas](#solución-de-problemas)
-  - [Licencia](#licencia)
+- [Tabla de Contenidos](#tabla-de-contenidos)
+- [Requisitos Previos](#requisitos-previos)
+- [Instalación](#instalación)
+- [Ejecución Local](#ejecución-local)
+  - [Android/iOS](#androidios)
+  - [Web](#web)
+- [Estructura del Proyecto](#estructura-del-proyecto)
+- [Comandos Útiles](#comandos-útiles)
+- [Solución de Problemas](#solución-de-problemas)
 
 ---
 
@@ -73,18 +71,16 @@ Antes de comenzar, asegúrate de tener instalado lo siguiente:
 
 ```
 lib/
-  cubits/           # Lógica de estado (BLoC/Cubit)
+  assets/             # Imágenes y recursos estáticos
+  constants/        # Colores, estilos, etc.
   controllers/      # Controladores de lógica de negocio
-  models/           # Modelos de datos
+  cubits/           # Lógica de estado (BLoC/Cubit)
   functions/        # Funciones auxiliares
+  models/           # Modelos de datos
   screens/          # Pantallas principales (UI)
   widgets/          # Widgets reutilizables
-  constants/        # Colores, estilos, etc.
   main.dart         # Punto de entrada de la app
-assets/             # Imágenes y recursos estáticos
 android/            # Proyecto nativo Android
-ios/                # Proyecto nativo iOS
-web/                # Configuración para web
 ```
 
 ## Comandos Útiles
@@ -120,7 +116,3 @@ web/                # Configuración para web
 - Si el emulador no aparece, asegúrate de que esté iniciado o conecta un dispositivo físico.
 
 - Consulta la [documentación oficial de Flutter](https://docs.flutter.dev/) para más detalles.
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT. Consulta el archivo

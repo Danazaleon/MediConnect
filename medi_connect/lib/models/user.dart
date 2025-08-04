@@ -1,5 +1,7 @@
 
-
+//Class User que representa un usuario del sistema
+// Contiene campos: id, name, email, phone, password, type (doctor o patient),
+// specialty (solo de doctor), rating (solo de doctor) y birthdate (solo de paciente)
 class User {
   final int id;
   final String name;

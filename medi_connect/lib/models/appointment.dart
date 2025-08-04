@@ -1,3 +1,6 @@
+
+//Clase Appointment que representa una cita médica
+// Contiene campos: id, doctorId, patientName y date
 class Appointment {
   final int id;
   final int doctorId;

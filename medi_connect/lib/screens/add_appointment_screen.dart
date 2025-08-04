@@ -7,7 +7,6 @@ import 'package:medi_connect/controllers/api.controller.dart';
 import 'package:medi_connect/cubits/auth/auth_cubit.dart';
 
 //Dialog que sale para agendar una cita
-
 class AppointmentDialog extends StatefulWidget {
   const AppointmentDialog({super.key});
 

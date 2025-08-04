@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:medi_connect/cubits/auth/auth_cubit.dart';
 import 'package:medi_connect/widgets/login_screen.dart';
 
-
+// Pantalla de inicio de sesión para doctores
 class DoctorLoginScreen extends StatelessWidget {
   const DoctorLoginScreen({super.key});
 

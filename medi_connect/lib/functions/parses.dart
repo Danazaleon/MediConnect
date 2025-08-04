@@ -2,6 +2,7 @@ import 'package:logger/logger.dart';
 import 'package:medi_connect/models/appointment.dart';
 import 'package:medi_connect/models/doctor.dart';
 
+// Devuelve una lista de médicos válidos a partir de un JSON..
 List<Doctor> parseDoctors(List<dynamic> jsonList) {
   final List<Doctor> validDoctors = [];
   
@@ -23,7 +24,7 @@ List<Doctor> parseDoctors(List<dynamic> jsonList) {
   return validDoctors;
 }
 
-
+// Devuelve una lista de citas a partir de un JSON.
 List<Appointment> parseAppointments(List<dynamic> jsonList) {
   return jsonList.map<Appointment>((json) {
     return Appointment.fromJson(json as Map<String, dynamic>);

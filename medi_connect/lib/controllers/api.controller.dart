@@ -6,8 +6,8 @@ import '../constants/url_base.dart';
 //Llamada a la API para registrar un usuario
 Future postRegister(Map<String, dynamic> userData) async {
   final url = Uri.http(urlBase(), 'auth/register');
-  Logger().i('URL: $url');
-  Logger().i('userData: $userData');
+  //Logger().i('URL: $url');
+  //Logger().i('userData: $userData');
 
   var body = jsonEncode(userData);
   var headers = {
@@ -23,6 +23,8 @@ Future postRegister(Map<String, dynamic> userData) async {
 }
 
 //Llamada a la API para iniciar sesión
+//Map<String, dynamic> userData = {"email": "", "password": ""}
+// userData debe contener el email y la contraseña del usuario
 Future postLogin(Map<String, dynamic> userData) async {
   final url = Uri.http(urlBase(), 'auth/login');
   var body = jsonEncode(userData);
@@ -33,6 +35,7 @@ Future postLogin(Map<String, dynamic> userData) async {
 }
 
 //Obtener Citas de un Doctor
+// int doctorId es el ID del doctor para el cual se quieren obtener las citas
 Future getAppointments(int doctorId) async {
   final url = Uri.http(urlBase(), 'doctors/$doctorId/appointments');
   Map<String, String> header = {'Accept': 'application/json'};
@@ -47,6 +50,9 @@ Future getAppointments(int doctorId) async {
 }
 
 //Crear nueva cita para un doctor
+//int doctorId es el ID del doctor para el cual se quiere crear una cita
+// appointmentData debe contener los datos de la cita, como el nombre del paciente y la fecha
+// Map<String, dynamic>  appointmentData = {"patientName": "Ana Gómez", "date": "2025-07-25"}
 Future postAppointment(
   int doctorId,
   Map<String, dynamic> appointmentData,

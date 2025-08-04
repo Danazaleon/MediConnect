@@ -4,6 +4,8 @@ import 'package:medi_connect/models/doctor.dart';
 import 'package:medi_connect/widgets/build_detail_item.dart';
 import 'package:medi_connect/widgets/constuction_dialog.dart';
 
+// Muestra el perfil de un doctor en un modal
+// Permite al paciente ver detalles como nombre, especialidad, correo y calificación
 void showDoctorProfile(BuildContext context, Doctor doctor) {
   showModalBottomSheet(
     context: context,

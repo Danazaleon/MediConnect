@@ -1,13 +1,14 @@
 
 import 'package:flutter/material.dart';
 
+// SummaryCard muestra un resumen de información con un ícono, valor y etiqueta
 class SummaryCard extends StatelessWidget {
   final IconData icon;
   final String value;
   final String label;
   final Color color;
 
-  const SummaryCard({
+  const SummaryCard({super.key, 
     required this.icon,
     required this.value,
     required this.label,

@@ -9,6 +9,7 @@ import 'package:medi_connect/models/user.dart';
 part 'role_state.dart';
 part 'auth_state.dart';
 
+// Definición de los roles de usuario
 class AuthCubit extends Cubit<AuthState> {
   AuthCubit() : super(AuthInitial());
 
@@ -26,7 +27,7 @@ class AuthCubit extends Cubit<AuthState> {
     return state is DoctorAuthenticated ? state.user : null;
   }
 
-  //usuario Doctor Actual
+  //usuario paciente Actual
   User? get currentPatientUser {
     final state = this.state;
     return state is PatientAuthenticated ? state.user : null;
@@ -40,18 +41,18 @@ class AuthCubit extends Cubit<AuthState> {
       final response = await postLogin(userData);
 
       Logger().i('Response data: ${response.body}');
+      Logger().i('login Status Code: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         Map<String, dynamic> parsedJson = json.decode(response.body);
 
         User user = User.fromJson(parsedJson['user']);
 
-        Logger().i(user.type);
 
         // Verificar si el tipo de usuario coincide con el rol seleccionado
         if ((_currentRole == UserRole.doctor && user.type == 'doctor') ||
             (_currentRole == UserRole.patient && user.type == 'patient')) {
-          Logger().i(user.type);
+          
 
           if (_currentRole == UserRole.doctor) {
             emit(DoctorAuthenticated(user));
@@ -81,10 +82,13 @@ class AuthCubit extends Cubit<AuthState> {
   emit(AuthLoading());
   try {
     final registrationResponse = await postRegister(userData);
-    //Logger().i('Registro: ${registrationResponse.statusCode}');
+    Logger().i('Registro Status Code: ${registrationResponse.statusCode}');
+    
 
     if (registrationResponse.statusCode == 200) {
+      //Logger().i(registrationResponse.body);
       Map<String, dynamic> parsedJson = json.decode(registrationResponse.body);
+      //Logger().i(parsedJson);
       User user = User.fromJson(parsedJson['user']);
       
       await login(user.email, user.password);

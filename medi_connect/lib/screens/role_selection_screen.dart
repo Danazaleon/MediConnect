@@ -136,43 +136,6 @@ class RoleSelectionScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 30),
 
-                // Botón de prueba API (puedes ocultarlo en producción)
-                FractionallySizedBox(
-                  widthFactor: 0.7,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.accent,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                          10,
-                        ), // Bordes redondeados
-                      ),
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 18,
-                      ), // Más alto y rectangular
-                    ),
-                    onPressed: () async {
-                      // Ejemplo de llamada a la API
-                      // try {
-                      //   Map<String, dynamic> userData = {...};
-                      //   String response = await postRegister(userData);
-                      //   Logger().i(response);
-                      // } catch (e, stack) {
-                      //   Logger().e("Error en el botón Prueba API: $e");
-                      //   Logger().e(stack);
-                      // }
-                    },
-                    child: const Text(
-                      'Pruba de API',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.w400,
-                        fontFamily: 'Verdana',
-                        fontSize: 16,
-                      ),
-                    ),
-                  ),
-                ),
               ],
             ),
           ),

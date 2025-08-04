@@ -1,3 +1,6 @@
+//Funciones de validación para campos de formulario
+
+//Validacion de correo electrónico
 bool isValidEmail(String email) {
   final RegExp emailRegex = RegExp(
     r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
@@ -5,6 +8,7 @@ bool isValidEmail(String email) {
   return emailRegex.hasMatch(email);
 }
 
+//Validación de número de teléfono
 String? validatePhoneNumber(String value) {
   if (value.isEmpty) {
     return 'Por favor, ingrese un número de teléfono';
@@ -16,6 +20,7 @@ String? validatePhoneNumber(String value) {
   return null; // Sin errores
 }
 
+//Validación de contraseña
 bool isValidPassword(String password) {
   // Longitud mínima de 8 caracteres
   if (password.length < 8) return false;

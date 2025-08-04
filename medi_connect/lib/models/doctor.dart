@@ -1,3 +1,5 @@
+//Class Doctor que representa un médico
+// Contiene campos: id, name, email, phone, specialty y rating
 class Doctor {
   final int id;
   final String? name;

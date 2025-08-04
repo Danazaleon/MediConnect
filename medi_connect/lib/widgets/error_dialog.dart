@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:medi_connect/constants/app_colors.dart';
 
+// Muestra un diálogo de error con un título y mensaje personalizados
 void showErrorDialog(BuildContext context, String title, String message) {
     showDialog(
       context: context,

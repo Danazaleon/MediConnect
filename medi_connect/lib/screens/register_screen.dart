@@ -8,6 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:medi_connect/functions/functions.dart';
 import 'package:medi_connect/widgets/error_dialog.dart';
 
+
+// Pantalla de registro para pacientes y doctores
+// Permite al usuario seleccionar su rol (paciente o doctor) y completar el formulario correspondiente
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 

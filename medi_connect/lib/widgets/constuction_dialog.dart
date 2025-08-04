@@ -1,8 +1,7 @@
-
-  
-  import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:medi_connect/constants/app_colors.dart';
 
+// Muestra un diálogo de construcción con un título, mensaje y simulación
 void showConstructionDialog(BuildContext context,String title,String message, String simulation) {
     showDialog(
       context: context,

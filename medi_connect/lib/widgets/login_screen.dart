@@ -5,6 +5,8 @@ import 'package:medi_connect/cubits/auth/auth_cubit.dart';
 import 'package:flutter/gestures.dart';
 import 'package:medi_connect/widgets/error_dialog.dart';
 
+// Pantalla de inicio de sesión para doctores y pacientes
+// Permite a los usuarios ingresar su correo electrónico y contraseña para autenticarse en la aplicación
 class LoginScreen extends StatefulWidget {
   final String title;
   final String role; // 'doctor' o 'patient'
