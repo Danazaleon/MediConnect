@@ -61,11 +61,12 @@ class _PatientHomeScreen extends State<PatientHomeScreen> {
 
     return BlocBuilder<AuthCubit, AuthState>(
       builder: (context, state) {
+        Logger().i('AuthState actual: $state'); // <-- Para debug
         if (state is AuthLoading) {
           return Center(child: CircularProgressIndicator());
         } else if (state is AuthError) {
           return Center(child: Text('Error: ${state.message}'));
-        } else if (state is AuthSuccess) {
+        } else if (state is AuthSuccess || state is PatientAuthenticated) {
           final user = authCubit.currentPatientUser;
 
           return Scaffold(
@@ -248,7 +249,7 @@ class _PatientHomeScreen extends State<PatientHomeScreen> {
                                     ),
                                     Text(
                                       ' ${doctor.rating?.toStringAsFixed(1) ?? 'N/A'}',
-                                    ), // Manejo de null
+                                    ) // Manejo de null
                                   ],
                                 ),
                               ],
@@ -267,9 +268,10 @@ class _PatientHomeScreen extends State<PatientHomeScreen> {
               ),
             ),
           );
+        } else if (state is AuthInitial) {
+          return Center(child: CircularProgressIndicator());
         }
-        // Default return if none of the above conditions are met
-        return Center(child: Text('Estado desconocido'));
+        return Center(child: Text('Estado desconocido: ${state.runtimeType}'));
       },
     );
   }
